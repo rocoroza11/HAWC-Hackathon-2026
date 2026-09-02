@@ -1,0 +1,70 @@
+"Parameter list for UoR daily climate record, 1908 to date",,,"CSV file, updated August 2026 SB"
+,,,
+Parameter name,Units,Description,Notes
+YYYY,,"Year, 4 digits",
+MM,,"Month, 01-12",
+DD,,"Date, 01-31",
+Date,,Combined date in form d mmm YYYY,
+Week Day,,"Sunday = 1, Monday = 2 etc",
+Year Day,,"Sunday, 1",
+Week No,,"Week no. 1 always begins on 1 January; week 53 thus includes only day 365 (31 December), or 365 and 366 (30 and 31 Dec) in leap years",
+"Tmax, °C",°C,Daily maximum temperature 09-09h UTC,Commences 1 Jan 1908: some gaps 1914-17 completed from nearby stations
+"Tmin, °C",°C,Daily minimum temperature 09-09h UTC,Commences 1 Jan 1908: some gaps 1914-17 completed from nearby stations
+"Tgrass, °C",°C,Daily grass minimum temperature 09-09h UTC,Commences 23 Jan 1920. Occasionally missing in winter months when covered in snow
+"Tmean, °C",°C,Daily mean temperature (average of Tmax and Tmin),As Tmax/Tmin
+"Trange, °C",K,Diurnal range in temperature (max - min),As Tmax/Tmin
+AirFrost 0/1,0/1,Daily minimum temperature 09-09h UTC below 0 °C,As Tmin
+GrdFrost 0/1,0/1,Daily grass minimum temperature 09-09h UTC below 0 °C,As Grass temperature
+IceDay 0/1,0/1,Daily maximum temperature 09-09h UTC below 0 °C,As Tmax
+Tmax25C 0/1,0/1,Daily maximum temperature 09-09h UTC at or above 25 °C,As Tmax
+Tmax30C 0/1,0/1,Daily maximum temperature 09-09h UTC at or above 30 °C,As Tmax
+Tmin15C 0/1,0/1,Daily minimum temperature 09-09h UTC at or above 15 °C,As Tmin
+"T10, °C",°C,"Soil temperature at 10 cm depth, at 0900 UTC",Commences 8 June 1961
+"T30, °C",°C,"Earth temperature at 30 cm depth, at 0900 UTC",Commences 1 Jan 1910
+"T100, °C",°C,"Earth temperature at 100 cm depth, at 0900 UTC",Commences 1 Jan 1971
+"Rain 09-09, mm",mm,"Daily rainfall amount 0900-0900 UTC, thrownback",Commences 1 Jan 1908: some gaps 1914-17 completed from nearby stations
+"Rain 09-09, mm (NoTraces)",mm,"Daily rainfall amount 0900-0900 UTC, thrownback, excluding trace entries",Commences 1 Jan 1908: some gaps 1914-17 completed from nearby stations
+"Rain cumul from 1 Jan, mm",mm,Accumulated rainfall amount since 1 January to that date,As Rain
+"Rain Durn, h",h,"Daily rainfall duration 0900-0900 UTC, thrownback",Commences 1 Nov 1960
+RDurn missing 0/1,0/1,"Daily rainfall duration 0900-0900 UTC, thrownback MISSING",As RainDur'n
+RainNil 0/1,0/1,Dry day (nil rainfall incl traces),Commences 1 Jan 1908: some gaps 1914-17 completed from nearby stations
+RainDay,0/1,Rain day (0.2 mm or more rainfall amount 0900-0900 UTC),Commences 1 Jan 1908: some gaps 1914-17 completed from nearby stations
+WetDay,0/1,Wet day (1.0 mm or more rainfall amount 0900-0900 UTC),Commences 1 Jan 1908: some gaps 1914-17 completed from nearby stations
+SunHrCS,h,"Daily sunshine duration, from Campbell-Stokes sunshine recorder",Commences 1 April 1956
+"SunCS cumul from 1 Jan, h",h,Accumulated sunshine duration since 1 January to that date,As Sunshine
+SunHrKZ,h,"Daily sunshine duration, from Kipp & Zonen electronic sunshine recorder",Commences 1 Jan 2009; some gaps 2014-17 owing to instrument malfunction
+SunHr MOKZ,h,"Daily sunshine duration, from Kipp & Zonen Met Office MMS electronic sunshine recorder ",Commences Aug 2012
+Campbell-Stokes sun not used,0/1,"Campbell-Stokes record unreliable midwinter months 2020-24, Kipp & Zonen record used",
+CS Sun missing,0/1,Daily sunshine duration from Campbell-Stokes sunshine recorder MISSING,As CS sunshine
+KZ Sun missing,0/1,"Daily sunshine duration, from Kipp & Zonen electronic sunshine recorder MISSING",As KZ sunshine
+SunNil-CS,0/1,Nil daily sunshine duration from Campbell-Stokes sunshine recorder,As CS sunshine
+SunNil-KZ,0/1,Nil daily sunshine duration from Kipp & Zonen electronic sunshine recorder,As KZ sunshine
+Sun12h,0/1,Daily sunshine duration from Campbell-Stokes instrument 12.0 h or greater,As CS sunshine
+GSR-MJm2,MJ/m2,Daily global solar radiation 00-24h,Commences 30 Jan 1973
+GSR missing 0/1,0/1,Daily global solar radiation 00-24h MISSING,As GSR
+N10-09h,tenths,"Cloud cover at 0900 UTC, in tenths","Commences 1 Jan 1908, some gaps, ends 31 Dec 1958"
+N8-09h,oktas,"Cloud cover at 0900 UTC, in oktas (eighths) ",Commences 1 Jan 1959 **NOTE** 9 indicates 'sky obscured' - OMIT - do not include in averages etc!
+SkyObsc 0/1,0/1,"Sky obscured at 0900 UTC, due to fog, blowing snow etc (indicated by N8-09h = 9)",As N10 or N8
+N8 09h composite % (no obsc),%,Cloud cover at 0900 UTC as percentage (calculated from N10-09h or N8-09h data),"Commences 1 Jan 1908, some gaps"
+dd 09h deg,deg,"Wind direction at 0900 UTC, in tens of degrees veer from north (09 = 090 deg = easterly)",Commences 1 Jan 1908: some gaps 1914-17 owing to missing registers
+ff 09h m/s,m/s,Wind speed at 0900 UTC,Conversion from knots
+Max Gust 00-24h m/s,m/s,Max gust wind speed 00-24 UTC,Conversion from knots
+Vis09h code,code,Visibility code (1-9) at 0900 UTC observation,Commences 1 June 1960
+Vis09h km,km,"Visibility at 0900 UTC observation, converted from code figure",Commences 1 June 1960
+ww code 09h,,Present weather at 0900 UTC (WMO ww code),"Commences 1 Jan 1908, some gaps: early records may be conversions from Beaufort letters"
+"MSLP 09h, hPa",hPa,"Barometric pressure at 0900 UTC, corrected to Mean Sea Level, from manual mercury barometer","Commences 1 Jan 1908, some gaps and some instrument moves. Retrospective MSL correction to 2019 - use MSLP QC for morerecent MSL correction, presently only 1 hPa resolution to 2017 inclusive"
+"MSLP 09h METFIDAS, hPa",hPa,"Barometric pressure at 0900 UTC, corrected to Mean Sea Level, from electronic sensor (MetFIDAS)",Commences 1 Jan 2009
+MSLP QC hPa,,"Barometric pressure at 0900 UTC, corrected to Mean Sea Level, MSLP QC","Manual observations to 2009, retrospectively corrected to MSL 2025/26; MetFIAS electronic sensor since 2009"
+"Tdry 09h, °C",°C,Dry bulb temperature at 0900 UTC,"Commences 1 Jan 1908, some gaps"
+"Twet 09h, °C",°C,Wet bulb temperature at 0900 UTC,"Commences 1 Jan 1908, some gaps"
+RH09h %,%,"Relative Humidity at 0900 UTC, calculated from dry- and wet-bulb readings","Commences 1 Jan 1908, retrospectively calculated"
+Snow 5 Sleet 1,0/1/5,Snow (code 5) or sleet (code 1) observed to fall at any time 00-24 UTC,"Commences 1 Jan 1908, some gaps"
+Snow-Sleet 0/1,0/1,Snow or sleet observed to fall at any time 00-24 UTC - binary 0/1 from code 1 or 5 entry,"Commences 1 Jan 1908, some gaps"
+Snow Lying 09h 0/1,0/1,Snow lying at 0900 UTC (more than half ground covered),"Commences 1 Jan 1908, some gaps to about 1920"
+"Snow-Depth, cm",cm,Depth of snow at 0900 UTC,"Commences 1 Sept 1950, occasional earlier records noted"
+Thunder 0/1,0/1,Thunder heard at any time 00-24 UTC - binary 0/1,"Commences 1 Jan 1908, some gaps"
+Hail code,code,Hail observed to fall at any time 00-24 UTC - code increases with hailstone size,Commences 1 Jan 1960
+Hail 0/1,0/1,Hail observed to fall at any time 00-24 UTC - binary 0/1,Commences 1 Jan 1960
+Gale 0/1,0/1,Gale observed at any time 00-24 UTC - mean wind speed > 17 m/s for 10 min or longer - binary 0/1,Commences 1 Jan 1967
+Fog09h 0/1,0/1,Fog (visibility < 1000 m) observed at 0900 UTC - from visibility code entry,"Commences 1 Jan 1908, some gaps"
+ThickFog09h 0/1,0/1,Thick fog (visibility < 200 m) observed at 0900 UTC - from visibility code entry,Commences 1 Jan 1960
