@@ -70,12 +70,12 @@ def main():
     model = MultiOutputRegressor(
         HistGradientBoostingRegressor(
             loss = "squared_error",
-            max_iter=300, 
-            learning_rate=0.05,
-            max_leaf_nodes = 31, 
+            max_iter=10000, 
+            learning_rate=0.75,
+            max_leaf_nodes = 50, 
             max_depth = None, 
             min_samples_leaf = 20, 
-            l2_regularization = 0.0,
+            l2_regularization = 0.01,
             max_features = 1.0, 
             early_stopping= False, 
             random_state=42
