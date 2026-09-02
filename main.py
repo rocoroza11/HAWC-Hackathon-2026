@@ -1,6 +1,17 @@
 import pandas as pd 
 import numpy as np
 
+filepath = str(input("Enter filepath"))
+
+def file_write(result, filepath):
+    try:
+        if isinstance(result, pd.DataFrame):
+            result.to_csv(filepath, index=False)
+            print(f"File has been saved to {filepath}")
+    except OSError as e:
+        print(f"File write failed: {e}")
+
+
 dataset = pd.read_csv(
     "maindata.csv",
     encoding = "latin1",
@@ -29,7 +40,9 @@ df.loc[df["Tdry 09h, °C"] > 45,"Tdry 09h, °C"] = pd.NA
 df["Tdry 09h, °C"] = df["Tdry 09h, °C"].interpolate(limit=3)
 df["RH09h %"]   = df["RH09h %"].interpolate(limit=3)
 
-print(df)
+file_write(df, "dftest.csv")
+
+
 
 
 #def wet_bulb_stull(df):
