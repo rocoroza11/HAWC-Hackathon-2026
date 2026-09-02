@@ -2,7 +2,8 @@ import pandas as pd
 
 dataset = pd.read_csv(
     "maindata.csv",
-    encoding = "latin1"
+    encoding = "latin1",
+    low_memory = False
 )
 
 dataset["timestamp"] = pd.to_datetime(
@@ -11,4 +12,4 @@ dataset["timestamp"] = pd.to_datetime(
 
 dataset = dataset.sort_values("timestamp").set_index("timestamp")
 
-print(dataset.dtypes)
+print(dataset.index.duplicated().sum())
