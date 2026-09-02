@@ -12,4 +12,4 @@ dataset["timestamp"] = pd.to_datetime(
 
 dataset = dataset.sort_values("timestamp").set_index("timestamp")
 
-print(dataset.index.duplicated().sum())
+print(dataset.index.to_series().diff().value_counts())
