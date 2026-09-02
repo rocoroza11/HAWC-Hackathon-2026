@@ -1,0 +1,1 @@
+reading_5min_all_columns.csv filter=lfs diff=lfs merge=lfs -text
