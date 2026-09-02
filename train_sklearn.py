@@ -5,7 +5,7 @@ from sklearn.metrics import accuracy_score, mean_absolute_error
 from sklearn.multioutput import MultiOutputRegressor
 
 
-DATA_PATH = "reading_5min_all_columns.csv"
+DATA_PATH = "2010-2023-cleaned.csv"
 FORECAST_STEPS = 36  # 36 * 5 minutes = 3 hours
 SERVER_INLET_SETPOINT_C = 24.0
 EVAP_WET_BULB_LIMIT_C = 20.0
