@@ -49,9 +49,20 @@ df = df.rename(columns={
     "Tmin, °C": "Tmin",
 })
 
+Tdry = df["Tdry"]
+RH_ = df["RH"]
+
+def wet_bulb_stulls (Tdry, RH_):
+    Tw = (
+        Tdry * np.arctan(0.151977 * np.sqrt(RH_ + 8.313659))
+        + np.arctan(Tdry + RH_)
+        - np.arctan(RH_ - 1.676331)
+        + 0.00391838 * RH_**(3/2) * np.arctan (0.023101 * RH_)
+        - 4.68035
+    )
+
+    return Tw 
+
+df["Tw"] = wet_bulb_stulls(Tdry, RH_)
+
 file_write(df, "dftest.csv")
-
-
-
-
-#def wet_bulb_stull(df):
