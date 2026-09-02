@@ -26,9 +26,8 @@ A data centre facilities/sustainability engineer who has to decide, hour by hour
 
 ## Dataset
 
-**Primary: Reading Atmospheric Observatory automatic measurements (1997–2023).**
-5-minute surface observations (temperature, humidity, pressure, wind, rainfall) in CSV.
-DOI: https://doi.org/10.17864/1947.000490
+**Primary: UoR climate data 1908 to date - CSV (as at 28 Aug 2026 SB)**
+- This dataset is given alongside the hackathon briefing. 
 
 This is the right engine because free cooling is an hour-by-hour decision — a window opens overnight and closes mid-morning. Only the high-frequency automatic record can resolve that:
 
