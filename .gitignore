@@ -1,0 +1,4 @@
+# too large to commit 
+reading_5min_all_columns.csv
+# or block all large CSVs too
+*.csv

@@ -40,7 +40,7 @@ df.loc[df["Tdry 09h, °C"] > 45,"Tdry 09h, °C"] = pd.NA
 df["Tdry 09h, °C"] = df["Tdry 09h, °C"].interpolate(limit=3)
 df["RH09h %"]   = df["RH09h %"].interpolate(limit=3)
 
-# rename df columns for simplicity; assist future programs
+# retrofitted renamed df columns for simplicity; assist future programs
 df = df.rename(columns={
     "Tdry 09h, °C": "Tdry",
     "Twet 09h, °C": "Twet",
