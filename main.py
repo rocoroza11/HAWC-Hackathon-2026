@@ -1,4 +1,5 @@
 import pandas as pd 
+import numpy as np
 
 dataset = pd.read_csv(
     "maindata.csv",
@@ -12,4 +13,23 @@ dataset["timestamp"] = pd.to_datetime(
 
 dataset = dataset.sort_values("timestamp").set_index("timestamp")
 
-print(dataset.index.to_series().diff().value_counts())
+# Drop exact duplicate timestamps, keep first
+dataset = dataset[~dataset.index.duplicated(keep="first")]
+
+# Reindex to a full regular hourly grid so lags/rolling windows are honest
+full_range = pd.date_range(dataset.index.min(), dataset.index.max(), freq="D")
+df = dataset.reindex(full_range)
+
+# Sanity-clip physically impossible values rather than dropping rows
+df["RH09h %"] = df["RH09h %"].clip(0, 100)
+df.loc[df["Tdry 09h, °C"] < -40, "Tdry 09h, °C"] = pd.NA   # implausible for UK data, treat as missing
+df.loc[df["Tdry 09h, °C"] > 45,"Tdry 09h, °C"] = pd.NA
+
+# Light interpolation for short gaps only (don't paper over long outages)
+df["Tdry 09h, °C"] = df["Tdry 09h, °C"].interpolate(limit=3)
+df["RH09h %"]   = df["RH09h %"].interpolate(limit=3)
+
+print(df)
+
+
+#def wet_bulb_stull(df):
