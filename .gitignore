@@ -1,4 +1,10 @@
+<<<<<<< HEAD
 # too large to commit 
 reading_5min_all_columns.csv
 # or block all large CSVs too
 *.csv
+=======
+reading_5mins_all_columns.csv
+archive/
+2010-2023-cleaned.csv
+>>>>>>> d0e814c354563e4cb6bd4921c1d043babb5d2efa
