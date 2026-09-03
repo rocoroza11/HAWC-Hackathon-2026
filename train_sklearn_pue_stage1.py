@@ -12,6 +12,10 @@ DATA_PATH = Path(__file__).resolve().parent / "2010-2023-cleaned.csv"
 FORECAST_STEPS = 36  # 36 * 5 minutes = 3 hours
 
 
+def default_cache_path(data_path):
+    return Path(data_path).with_suffix(".weather.parquet")
+
+
 @dataclass(frozen=True)
 class Stage1Result:
     model: MultiOutputRegressor
@@ -25,7 +29,7 @@ class Stage1Result:
     predictions: np.ndarray
 
 
-def load_weather_data(data_path=DATA_PATH):
+def _read_weather_from_csv(data_path):
     raw = pd.read_csv(data_path)
     raw["TimeStamp"] = pd.to_datetime(raw["TimeStamp"], dayfirst=True, errors="coerce")
     raw = raw.dropna(subset=["TimeStamp"])
@@ -33,6 +37,30 @@ def load_weather_data(data_path=DATA_PATH):
 
     weather = raw[["Td", "Tw", "RH", "P"]].apply(pd.to_numeric, errors="coerce")
     return weather.dropna(subset=["Td", "Tw", "RH", "P"])
+
+
+def load_weather_data(data_path=DATA_PATH, cache_path=None, use_cache=True):
+    data_path = Path(data_path)
+    cache_path = default_cache_path(data_path) if cache_path is None else Path(cache_path)
+
+    if use_cache and cache_path.exists():
+        csv_mtime = data_path.stat().st_mtime if data_path.exists() else 0
+        if cache_path.stat().st_mtime >= csv_mtime:
+            try:
+                return pd.read_parquet(cache_path)
+            except (ImportError, ValueError, OSError) as exc:
+                print(f"Could not read Parquet cache ({exc}); rebuilding from CSV.", flush=True)
+
+    weather = _read_weather_from_csv(data_path)
+
+    if use_cache:
+        try:
+            weather.to_parquet(cache_path)
+            print(f"Cached weather data at {cache_path.resolve()}", flush=True)
+        except (ImportError, ValueError, OSError) as exc:
+            print(f"Could not write Parquet cache ({exc}); continuing without cache.", flush=True)
+
+    return weather
 
 
 def add_features(df):

@@ -1,10 +1,7 @@
-<<<<<<< HEAD
-# too large to commit 
-reading_5min_all_columns.csv
-# or block all large CSVs too
+# Large local data/cache artifacts
 *.csv
-=======
-reading_5mins_all_columns.csv
+*.parquet
 archive/
+reading_5min_all_columns.csv
+reading_5mins_all_columns.csv
 2010-2023-cleaned.csv
->>>>>>> d0e814c354563e4cb6bd4921c1d043babb5d2efa
