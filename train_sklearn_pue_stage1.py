@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -7,7 +8,7 @@ from sklearn.metrics import mean_absolute_error
 from sklearn.multioutput import MultiOutputRegressor
 
 
-DATA_PATH = "2010-2023-cleaned.csv"
+DATA_PATH = Path(__file__).resolve().parent / "2010-2023-cleaned.csv"
 FORECAST_STEPS = 36  # 36 * 5 minutes = 3 hours
 
 
@@ -63,22 +64,25 @@ def build_stage1_model():
     return MultiOutputRegressor(
         HistGradientBoostingRegressor(
             loss="squared_error",
-            max_iter=10000,
+            max_iter=300,
             learning_rate=0.75,
             max_leaf_nodes=50,
             max_depth=None,
             min_samples_leaf=20,
             l2_regularization=0.01,
             max_features=1.0,
-            early_stopping=False,
+            early_stopping=True,
+            n_iter_no_change=10,
             random_state=42,
         )
     )
 
 
 def train_stage1_forecaster(data_path=DATA_PATH):
+    print(f"Loading weather data from {Path(data_path).resolve()}...", flush=True)
     weather = load_weather_data(data_path)
     model_df = add_features(weather)
+    print(f"Prepared {len(model_df):,} training rows. Fitting models...", flush=True)
     feature_cols = [c for c in model_df.columns if not c.startswith("target_")]
     target_cols = ["target_Td", "target_Tw"]
 
@@ -89,6 +93,7 @@ def train_stage1_forecaster(data_path=DATA_PATH):
 
     model = build_stage1_model()
     model.fit(X_train, y_train)
+    print("Generating test predictions...", flush=True)
     predictions = model.predict(X_test)
 
     return Stage1Result(
