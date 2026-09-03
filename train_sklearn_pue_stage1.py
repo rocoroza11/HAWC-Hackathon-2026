@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from pathlib import Path
 
+import joblib 
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import HistGradientBoostingRegressor
@@ -11,6 +12,8 @@ from sklearn.multioutput import MultiOutputRegressor
 DATA_PATH = Path(__file__).resolve().parent / "2010-2023-cleaned.csv"
 FORECAST_STEPS = 36  # 36 * 5 minutes = 3 hours
 
+def load_model():
+    return joblib.load("stage1")
 
 def default_cache_path(data_path):
     return Path(data_path).with_suffix(".weather.parquet")
