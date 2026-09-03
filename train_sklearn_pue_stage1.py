@@ -1,0 +1,124 @@
+from dataclasses import dataclass
+
+import numpy as np
+import pandas as pd
+from sklearn.ensemble import HistGradientBoostingRegressor
+from sklearn.metrics import mean_absolute_error
+from sklearn.multioutput import MultiOutputRegressor
+
+
+DATA_PATH = "2010-2023-cleaned.csv"
+FORECAST_STEPS = 36  # 36 * 5 minutes = 3 hours
+
+
+@dataclass(frozen=True)
+class Stage1Result:
+    model: MultiOutputRegressor
+    model_df: pd.DataFrame
+    train: pd.DataFrame
+    test: pd.DataFrame
+    X_train: pd.DataFrame
+    y_train: pd.DataFrame
+    X_test: pd.DataFrame
+    y_test: pd.DataFrame
+    predictions: np.ndarray
+
+
+def load_weather_data(data_path=DATA_PATH):
+    raw = pd.read_csv(data_path)
+    raw["TimeStamp"] = pd.to_datetime(raw["TimeStamp"], dayfirst=True, errors="coerce")
+    raw = raw.dropna(subset=["TimeStamp"])
+    raw = raw.sort_values("TimeStamp").set_index("TimeStamp")
+
+    weather = raw[["Td", "Tw", "RH", "P"]].apply(pd.to_numeric, errors="coerce")
+    return weather.dropna(subset=["Td", "Tw", "RH", "P"])
+
+
+def add_features(df):
+    out = df[["Td", "Tw", "RH", "P"]].copy()
+
+    for col in ["Td", "Tw", "RH", "P"]:
+        for lag in [1, 3, 6, 12]:
+            out[f"{col}_lag_{lag}"] = out[col].shift(lag)
+
+        for window in [3, 6, 12]:
+            out[f"{col}_mean_{window}"] = out[col].rolling(window).mean()
+
+        out[f"{col}_trend_12"] = out[col] - out[col].shift(12)
+
+    minutes_in_day = 24 * 60
+    day_minutes = out.index.hour * 60 + out.index.minute
+    out["tod_sin"] = np.sin(2 * np.pi * day_minutes / minutes_in_day)
+    out["tod_cos"] = np.cos(2 * np.pi * day_minutes / minutes_in_day)
+
+    out["doy_sin"] = np.sin(2 * np.pi * out.index.dayofyear / 365.25)
+    out["doy_cos"] = np.cos(2 * np.pi * out.index.dayofyear / 365.25)
+
+    out["target_Td"] = df["Td"].shift(-FORECAST_STEPS)
+    out["target_Tw"] = df["Tw"].shift(-FORECAST_STEPS)
+    return out.dropna()
+
+
+def build_stage1_model():
+    return MultiOutputRegressor(
+        HistGradientBoostingRegressor(
+            loss="squared_error",
+            max_iter=10000,
+            learning_rate=0.75,
+            max_leaf_nodes=50,
+            max_depth=None,
+            min_samples_leaf=20,
+            l2_regularization=0.01,
+            max_features=1.0,
+            early_stopping=False,
+            random_state=42,
+        )
+    )
+
+
+def train_stage1_forecaster(data_path=DATA_PATH):
+    weather = load_weather_data(data_path)
+    model_df = add_features(weather)
+    feature_cols = [c for c in model_df.columns if not c.startswith("target_")]
+    target_cols = ["target_Td", "target_Tw"]
+
+    split_at = int(len(model_df) * 0.8)
+    train, test = model_df.iloc[:split_at], model_df.iloc[split_at:]
+    X_train, y_train = train[feature_cols], train[target_cols]
+    X_test, y_test = test[feature_cols], test[target_cols]
+
+    model = build_stage1_model()
+    model.fit(X_train, y_train)
+    predictions = model.predict(X_test)
+
+    return Stage1Result(
+        model=model,
+        model_df=model_df,
+        train=train,
+        test=test,
+        X_train=X_train,
+        y_train=y_train,
+        X_test=X_test,
+        y_test=y_test,
+        predictions=predictions,
+    )
+
+
+def print_stage1_report(result):
+    print("=== Stage 1: 3h-ahead Td/Tw forecaster ===")
+    print(
+        f"Rows used: {len(result.model_df):,}  "
+        f"Train: {len(result.train):,}  Test: {len(result.test):,}"
+    )
+    print(
+        f"Td MAE: {mean_absolute_error(result.y_test['target_Td'], result.predictions[:, 0]):.3f} C   "
+        f"Tw MAE: {mean_absolute_error(result.y_test['target_Tw'], result.predictions[:, 1]):.3f} C"
+    )
+
+
+def main():
+    result = train_stage1_forecaster()
+    print_stage1_report(result)
+
+if __name__ == "__main__":
+    main()
